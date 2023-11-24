@@ -120,6 +120,7 @@ app.post("/users/login", async (req, res) => {
     res.status(403).json({ message: "authentication failed" });
   }
 });
+//user get courser
 app.get("/users/courses", authenticateJwt, async (req, res) => {
   const courses = await Course.find({ published: true });
   res.json({ courses });
