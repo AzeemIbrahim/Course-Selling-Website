@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 app.use(express.json());
 
-const secretKey = "12niuj8nx0";
+const secretKey = "Secret123";
 //defining mongoose schemas
 const userSchema = new mongoose.Schema({
   username: String,
@@ -59,7 +59,7 @@ app.post("/admin/signup", async (req, res) => {
   if (existingadmin) {
     res.status(403).json({ message: "Admin already Exists" });
   } else {
-    const newAdmin = new Admin({ username: username });
+    const newAdmin = new Admin({ username: username, password: password });
     await newAdmin.save();
     const token = generateJwt(Admin);
     res.json({ message: "admin created succesfully", token });
