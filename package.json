@@ -1,7 +1,24 @@
 {
+  "name": "course-selling-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.18",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.1"
+    "mongoose": "^8.0.2",
+    "react-router-dom": "^6.20.0",
+    "vite": "^5.0.4",
+    "yarn": "^1.22.21"
   }
 }
