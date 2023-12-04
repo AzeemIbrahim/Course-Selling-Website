@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
+import { Button } from "@mui/material";
+import { useNavigate, useNavigation } from "react-router-dom";
 function Courses() {
   const [courses, setCourses] = useState([]);
   useEffect(() => {
@@ -28,6 +30,7 @@ function Courses() {
   );
 }
 export function Course(props) {
+  const navigate = useNavigate();
   return (
     <div>
       <Card
@@ -49,6 +52,15 @@ export function Course(props) {
           src={props.course.imageLink}
           style={{ width: 300, height: 200 }}
         ></img>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => {
+            navigate("/courses/" + props.course._id);
+          }}
+        >
+          Edit
+        </Button>
       </Card>
     </div>
   );
