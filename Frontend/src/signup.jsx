@@ -2,6 +2,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
+import axios from "axios";
 import { useState } from "react";
 
 function Signup() {
@@ -14,7 +15,7 @@ function Signup() {
     >
       <div style={{ paddingTop: 140, marginBottom: 10 }}>
         <Typography variant="h6">
-          <i>Courzease</i>
+          <i>Hi let's Sign up </i>
         </Typography>
       </div>
       <Card variant="outlined" style={{ width: 400, padding: 20 }}>
@@ -45,19 +46,17 @@ function Signup() {
           <Button
             size="large"
             variant="contained"
-            onClick={() => {
-              fetch("http://localhost:3000/admin/signup", {
-                method: "POST",
-                body: JSON.stringify({ username: email, password: password }),
-                headers: { "content-type": "application/json" },
-              })
-                .then((res) => {
-                  return res.json();
-                })
-                .then((data) => {
-                  console.log(data);
-                  localStorage.setItem("token", data.token);
-                });
+            onClick={async () => {
+              const res = await axios.post(
+                "http://localhost:3000/admin/signup",
+                {
+                  username: email,
+                  password: password,
+                }
+              );
+              const data = res.data;
+              localStorage.setItem("token", data.token);
+              window.location = "/";
             }}
           >
             Sign Up

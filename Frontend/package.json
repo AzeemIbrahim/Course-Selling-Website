@@ -12,6 +12,9 @@
   "dependencies": {
     "@mui/material": "^5.14.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.6",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "props": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.1.1"
