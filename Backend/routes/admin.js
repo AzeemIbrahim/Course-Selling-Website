@@ -58,10 +58,10 @@ router.get("/getCourses", authenticateJwt, async (req, res) => {
   const courses = await Course.find({ user: req.user._id });
   res.json(courses);
 });
-router.get("/courses/:courseId", authenticateJwt, async (req, res) => {
+router.get("/course/:courseId", authenticateJwt, async (req, res) => {
   const courseId = req.params.courseId;
   const course = await Course.findById(courseId);
-  res.json(course);
+  res.json({ course });
 });
 
 module.exports = router;

@@ -39,6 +39,26 @@ function Appbar() {
             variant="contained"
             style={{ marginRight: 12 }}
             onClick={() => {
+              navigate("/getcourses/");
+              localStorage.setItem("token");
+            }}
+          >
+            Get previous courses
+          </Button>
+          <Button
+            variant="contained"
+            style={{ marginRight: 12 }}
+            onClick={() => {
+              navigate("/addcourse/");
+              localStorage.setItem("token");
+            }}
+          >
+            Add New Course
+          </Button>
+          <Button
+            variant="contained"
+            style={{ marginRight: 12 }}
+            onClick={() => {
               localStorage.setItem("token", null);
               window.location = "/";
             }}

@@ -1,159 +1,215 @@
+import { Card, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Card from "@mui/material/Card";
-import { Typography, TextField, Button } from "@mui/material/";
+import { Typography, TextField, Button } from "@mui/material";
+import axios from "axios";
 
 function Course() {
   let { courseId } = useParams();
-  const [courses, setCourses] = useState([]);
+  const [course, setCourse] = useState(null);
+
   useEffect(() => {
-    function callback2(data) {
-      setCourses(data);
-    }
-    function callback1(res) {
-      res.json().then(callback2);
-    }
-    fetch("http://localhost:3000/admin/getCourses", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    }).then(callback1);
+    axios
+      .get("http://localhost:3000/admin/course/" + courseId, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setCourse(res.data.course);
+      });
   }, []);
-  let course = null;
-  for (let i = 0; i < courses.length; i++) {
-    if (courses[i]._id == courseId) {
-      course = courses[i];
-    }
-  }
+
   if (!course) {
     return (
-      <div>
-        <h2>
-          <i>SORRY</i> we dont find any relevant courses
-        </h2>
+      <div
+        style={{
+          height: "100vh",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        Loading....
       </div>
     );
   }
+
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <CourseCard course={course} />
-      <UpdateCard course={course} courses={courses} setCourses={setCourses} />
+    <div>
+      <GrayTopper title={course.title} />
+      <Grid container>
+        <Grid item lg={8} md={12} sm={12}>
+          <UpdateCard course={course} setCourse={setCourse} />
+        </Grid>
+        <Grid item lg={4} md={12} sm={12}>
+          <CourseCard course={course} />
+        </Grid>
+      </Grid>
     </div>
   );
 }
-function UpdateCard(props) {
-  const course = props.course;
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, SetImage] = useState("");
 
+function GrayTopper({ title }) {
   return (
     <div
       style={{
-        padding: 150,
-        display: "flex",
-        justifyContent: "center",
-        width: "fullWidth",
+        height: 250,
+        background: "#31304D",
+        top: 0,
+        width: "100vw",
+        zIndex: 0,
+        marginBottom: -250,
       }}
     >
-      <Card variant="outlined" style={{ width: 500, padding: 20 }}>
-        <Typography>Update Course Details</Typography>
+      <div
+        style={{
+          height: 250,
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        <div>
+          <Typography
+            style={{ color: "white", fontWeight: 600 }}
+            variant="h3"
+            textAlign={"center"}
+          >
+            {title}
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-        <TextField
-          style={{ marginBottom: 10 }}
-          onChange={(t) => {
-            setTitle(t.target.value);
-          }}
-          fullWidth
-          label="Title"
-          variant="outlined"
-        />
+function UpdateCard({ course, setCourse }) {
+  const [title, setTitle] = useState(course.title);
+  const [description, setDescription] = useState(course.description);
+  const [image, setImage] = useState(course.imageLink);
+  const [price, setPrice] = useState(course.price);
 
-        <br />
-        <TextField
-          onChange={(d) => {
-            setDescription(d.target.value);
-          }}
-          fullWidth
-          label="description"
-          variant="outlined"
-        />
-        <br />
-        <TextField
-          onChange={(d) => {
-            SetImage(d.target.value);
-          }}
-          fullWidth
-          label="Image Link"
-          variant="outlined"
-        />
-        <br />
-        <Button
-          size="large"
-          variant="contained"
-          onClick={() => {
-            function callback2(data) {
-              let updatedcourse = [];
-              for (let i = 0; i < props.courses.length; i++) {
-                if (props.courses[i]._id == course._id) {
-                  updatedcourse.push({
-                    _id: course._id,
-                    title: title,
-                    imageLink: image,
-                    description: description,
-                  });
-                } else {
-                  updatedcourse.push(props.courses[i]);
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Card varint={"outlined"} style={{ maxWidth: 600, marginTop: 200 }}>
+        <div style={{ padding: 20 }}>
+          <Typography style={{ marginBottom: 10 }}>
+            Update course details
+          </Typography>
+          <TextField
+            value={title}
+            style={{ marginBottom: 10 }}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            fullWidth={true}
+            label="Title"
+            variant="outlined"
+          />
+
+          <TextField
+            value={description}
+            style={{ marginBottom: 10 }}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+            fullWidth={true}
+            label="Description"
+            variant="outlined"
+          />
+
+          <TextField
+            value={image}
+            style={{ marginBottom: 10 }}
+            onChange={(e) => {
+              setImage(e.target.value);
+            }}
+            fullWidth={true}
+            label="Image link"
+            variant="outlined"
+          />
+          <TextField
+            value={price}
+            style={{ marginBottom: 10 }}
+            onChange={(e) => {
+              setPrice(e.target.value);
+            }}
+            fullWidth={true}
+            label="Price"
+            variant="outlined"
+          />
+
+          <Button
+            variant="contained"
+            onClick={async () => {
+              axios.put(
+                "http://localhost:3000/admin/courses/" + course._id,
+                {
+                  title: title,
+                  description: description,
+                  imageLink: image,
+                  published: true,
+                  price,
+                },
+                {
+                  headers: {
+                    "Content-type": "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
                 }
-              }
-              props.setCourses(updatedcourse);
-            }
-            function callback1(res) {
-              res.json().then(callback2);
-            }
-            fetch("http://localhost:3000/admin/courses/" + course._id, {
-              method: "PUT",
-              body: JSON.stringify({
+              );
+              let updatedCourse = {
+                _id: course._id,
                 title: title,
                 description: description,
                 imageLink: image,
-                published: true,
-              }),
-              headers: {
-                Authorization: "Bearer " + localStorage.getItem("token"),
-                "Content-Type": "application/json",
-              },
-            }).then(callback1);
-          }}
-        >
-          UPDATE COURSE
-        </Button>
+                price,
+              };
+              setCourse(updatedCourse);
+            }}
+          >
+            {" "}
+            Update course
+          </Button>
+        </div>
       </Card>
     </div>
   );
 }
+
 function CourseCard(props) {
   const course = props.course;
-
   return (
-    <div style={{ padding: 150 }}>
+    <div
+      style={{
+        display: "flex",
+        marginTop: 50,
+        justifyContent: "center",
+        width: "100%",
+      }}
+    >
       <Card
-        variant="outlined"
         style={{
-          width: 300,
           margin: 10,
-          minHeight: 250,
+          width: 350,
+          minHeight: 200,
+          borderRadius: 20,
+          marginRight: 50,
+          paddingBottom: 15,
+          zIndex: 2,
         }}
       >
-        <Typography textAlign={"center"} variant="h5">
-          {course.title}
-        </Typography>
-
-        <Typography textAlign={"center"} variant="subtitle1">
-          {course.description}
-        </Typography>
-        <img src={course.imageLink} style={{ width: 300, height: 200 }}></img>
+        <img src={course.imageLink} style={{ width: 350 }}></img>
+        <div style={{ marginLeft: 10 }}>
+          <Typography variant="h5">{course.title}</Typography>
+          <Typography variant="subtitle2" style={{ color: "gray" }}>
+            Price
+          </Typography>
+          <Typography variant="subtitle1">
+            <b>Rs {course.price} </b>
+          </Typography>
+        </div>
       </Card>
     </div>
   );

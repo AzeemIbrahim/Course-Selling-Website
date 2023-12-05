@@ -15,7 +15,7 @@ function Signup() {
     >
       <div style={{ paddingTop: 140, marginBottom: 10 }}>
         <Typography variant="h6">
-          <i>Hi let's Sign up </i>
+          <i>Hi let's Sign you up </i>
         </Typography>
       </div>
       <Card variant="outlined" style={{ width: 400, padding: 20 }}>
